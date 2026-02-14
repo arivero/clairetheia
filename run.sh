@@ -1,14 +1,18 @@
 #!/usr/bin/env bash
 # ────────────────────────────────────────────────────────────────
-# Aletheia-style GVR loop for Codex CLI
-# Usage:  ./run.sh <problem_file> [max_rounds] [cli_command]
+# Aletheia-style GVR loop for CLI agents
+# Usage:   ./run.sh <problem_file> [max_rounds] [client]
 # Example: ./run.sh problem.md 5 codex
+# Clients:
+#   codex  -> runs `codex exec -`
+#   claude -> runs `claude -p`
+#   other  -> runs client string as provided (split on spaces)
 # ────────────────────────────────────────────────────────────────
 set -euo pipefail
 
-PROBLEM_FILE="${1:?Usage: $0 <problem_file> [max_rounds] [cli_cmd]}"
+PROBLEM_FILE="${1:?Usage: $0 <problem_file> [max_rounds] [client]}"
 MAX_ROUNDS="${2:-3}"
-CLI="${3:-codex}"                 # swap for: claude, gemini, etc.
+CLIENT="${3:-codex}"
 DIR="$(cd "$(dirname "$0")" && pwd)"
 WORK="$(mktemp -d)"
 
@@ -17,10 +21,33 @@ trap 'echo "[aletheia] work dir preserved at $WORK"' EXIT
 PROBLEM="$(cat "$PROBLEM_FILE")"
 
 # ── helpers ─────────────────────────────────────────────────────
+build_client_cmd() {
+  local spec="$1"
+  case "$spec" in
+    codex)
+      CLIENT_CMD=(codex exec -)
+      ;;
+    claude)
+      CLIENT_CMD=(claude -p)
+      ;;
+    *)
+      read -r -a CLIENT_CMD <<< "$spec"
+      ;;
+  esac
+
+  if [[ "${#CLIENT_CMD[@]}" -eq 0 ]]; then
+    echo "[aletheia] Invalid client command: '$spec'"
+    exit 1
+  fi
+}
+
 call_model() {
   # $1 = system prompt file, $2 = user content (stdin-safe)
-  printf '%s\n\n---\n\n%s' "$(cat "$1")" "$2" | $CLI
+  printf '%s\n\n---\n\n%s' "$(cat "$1")" "$2" | "${CLIENT_CMD[@]}"
 }
+
+build_client_cmd "$CLIENT"
+echo "[aletheia] client command: ${CLIENT_CMD[*]}"
 
 # ── ROUND 0: Generate ──────────────────────────────────────────
 echo "═══ [aletheia] Round 0 — GENERATE ═══"
@@ -43,7 +70,7 @@ for ((round=1; round<=MAX_ROUNDS; round++)); do
   VERIFIER_INPUT="$(sed "s|{PROBLEM}|$PROBLEM|" "$DIR/prompts/verifier.md")
 $SOLUTION"
 
-  FEEDBACK="$(printf '%s' "$VERIFIER_INPUT" | $CLI)"
+  FEEDBACK="$(printf '%s' "$VERIFIER_INPUT" | "${CLIENT_CMD[@]}")"
   echo "$FEEDBACK" | tee "$WORK/feedback_$round.md"
 
   # ── Check verdict ─────────────────────────────────────────────
@@ -81,7 +108,7 @@ $SOLUTION"
                         "$DIR/prompts/reviser.md")
 $FEEDBACK"
 
-  SOLUTION="$(printf '%s' "$REVISER_INPUT" | $CLI)"
+  SOLUTION="$(printf '%s' "$REVISER_INPUT" | "${CLIENT_CMD[@]}")"
   echo "$SOLUTION" | tee "$WORK/solution_$round.md"
 
   if echo "$SOLUTION" | grep -q "STATUS: STUCK"; then
