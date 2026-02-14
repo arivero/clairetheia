@@ -1,0 +1,93 @@
+# Aletheia-style Generate → Verify → Revise scaffold for Codex CLI
+
+Minimal, **prompt-only** reimplementation of the core loop described in
+*"Towards Autonomous Mathematics Research"* (arXiv 2602.10177 v2, Google DeepMind).
+
+## Key insight from the paper
+
+> Decoupling a reasoning model's final output from its intermediate thinking
+> tokens, and adding well-chosen prompt scaffolding, enables the model to
+> recognize flaws it initially overlooked during generation.
+
+The entire value comes from **three system-prompt files** and a tiny shell
+driver that feeds them to `codex` in sequence.
+
+```
+┌──────────┐      ┌──────────┐      ┌──────────┐
+│ GENERATOR│─────▶│ VERIFIER │─────▶│ REVISER  │──┐
+└──────────┘      └──────────┘      └──────────┘  │
+      ▲                                            │
+      └────────────── loop (≤ N) ──────────────────┘
+```
+
+## Files
+
+| File | Purpose |
+|---|---|
+| `orchestrator.md` | **Main prompt** — system prompt for an interactive Codex session that drives the full GVR loop via subagents |
+| `aletheia.sh` | One-liner launcher: `codex --system-prompt orchestrator.md` |
+| `prompts/generator.md` | Subagent: produce a candidate solution |
+| `prompts/verifier.md` | Subagent: adversarially audit the solution |
+| `prompts/reviser.md` | Subagent: patch only what the verifier flagged |
+| `run.sh` | Headless batch driver (no interaction, pipe-based) |
+
+## Quick start — Interactive session (recommended)
+
+```bash
+chmod +x aletheia.sh
+
+# Option A: launch, then paste your problem
+./aletheia.sh
+
+# Option B: pre-load a problem file
+echo "Prove: every continuous bijection from a compact space to a Hausdorff space is a homeomorphism." > problem.md
+./aletheia.sh problem.md
+
+# Option C: use a different CLI backend
+./aletheia.sh problem.md claude
+```
+
+This opens a single **interactive session** where the orchestrator spawns
+Generator / Verifier / Reviser as subagents and checkpoints with you after
+each step. You can intervene at any point — inject hints, override verdicts,
+or steer strategy.
+
+## Alternative — headless batch mode
+
+```bash
+chmod +x run.sh
+./run.sh problem.md          # defaults to 3 rounds, codex
+./run.sh problem.md 5        # 5 rounds
+./run.sh problem.md 3 claude # use Claude Code
+```
+
+## Design decisions drawn from the paper
+
+1. **Separate verifier prompt** — the paper's §2.2 shows this is the single
+   biggest lever; the verifier never sees the generator's chain-of-thought,
+   only its final output.
+2. **Balanced prompting** — the verifier is told to look for both correctness
+   *and* incorrectness ("prove or disprove each step") to prevent confirmation
+   bias (noted in v2's companion blog).
+3. **Admit failure** — the verifier can output `VERDICT: FAIL` to halt early
+   rather than endlessly patching garbage. The paper credits this as a key
+   efficiency feature for human-AI collaboration.
+4. **Tool-use stubs** — the generator prompt encourages web search and Python
+   when available, mirroring Aletheia's tool integration which significantly
+   reduced citation hallucinations (§2.3).
+5. **Max rounds cap** — the paper uses a "preset hyperparameter limit";
+   3–5 rounds is a reasonable default for Codex CLI budgets.
+6. **Human-in-the-loop checkpoints** — after every subagent call the
+   orchestrator pauses and asks if you want to proceed, inject a hint, or
+   pivot. This mirrors the "Advisor" collaboration model from v2: humans
+   guide AI through iterative cycles, and the reversed workflow seen in
+   LeeSeo26 where AI provided the strategy and humans filled in the details.
+
+## Adapting to your model / CLI
+
+The prompts are model-agnostic markdown. Swap `codex` for any CLI:
+
+```bash
+cat prompts/generator.md problem.md | claude --model claude-sonnet-4-5-20250929
+cat prompts/generator.md problem.md | gemini
+```
