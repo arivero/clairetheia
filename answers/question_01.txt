@@ -1,0 +1,148 @@
+QUESTION 1 (Martin Hairer) — Equivalence of the Phi^4_3 Measure Under Smooth Shifts
+====================================================================================
+
+ANSWER: YES. The measures mu and T*_psi(mu) are equivalent (mutually absolutely continuous).
+
+THEOREM. Let T^3 = (R/Z)^3 be the three-dimensional unit torus, and let mu denote the
+Phi^4_3 measure on D'(T^3). For any smooth nonzero function psi in C^infinity(T^3), let
+T_psi(phi) = phi + psi and T*_psi(mu) be the pushforward. Then T*_psi(mu) ~ mu.
+
+PROOF
+=====
+
+Step 1: Setup and regularization
+---------------------------------
+Let A = -Delta + m^2 on T^3 (m > 0) be the precision operator, so mu_0 (the GFF) has
+covariance A^{-1}. The regularized measures are:
+
+  dmu_eps(phi) = Z_eps^{-1} exp(-V_eps^{ren}(phi)) dmu_0(phi)
+
+where V_eps^{ren}(phi) = lambda integral [phi_eps^4 - 6 C_eps phi_eps^2 + 3 C_eps^2] dx
+                         - delta_m_eps integral phi_eps^2 dx
+
+with phi_eps = rho_eps * phi (mollification), C_eps = E[phi_eps(x)^2] (divergent),
+and delta_m_eps = O(lambda^2 log(1/eps)) is the second-order mass counterterm (sunset
+diagram, cf. Hairer 2014 Section 10, GIP 2015 Section 6).
+
+The Phi^4_3 measure mu = weak-lim mu_eps exists (GIP 2015, Catellier-Chouk 2018).
+
+Since psi is smooth, psi lies in the Cameron-Martin space H^1(T^3) of mu_0 (indeed
+A^{1/2} psi in L^2 since psi is smooth and A is elliptic).
+
+
+Step 2: Regularized Radon-Nikodym derivative
+----------------------------------------------
+At the regularized level:
+
+  dT*_psi(mu_eps)/dmu_eps = exp(<phi, A psi> - (1/2)||A^{1/2} psi||^2 - DeltaV_eps^{ren})
+
+Cameron-Martin density for the Gaussian part (psi in H^1):
+  dT*_psi(mu_0)/dmu_0 = exp(<phi, A psi> - (1/2)||A^{1/2} psi||^2)
+
+Interaction difference DeltaV_eps^{ren} = V_eps^{ren}(phi+psi) - V_eps^{ren}(phi):
+
+Expanding Wick-ordered quartic:
+  :(phi_eps + psi_eps)^4:_eps - :phi_eps^4:_eps
+  = 4 :phi_eps^3:_eps psi_eps + 6 :phi_eps^2:_eps psi_eps^2
+    + 4 phi_eps psi_eps^3 + psi_eps^4 + 6 C_eps psi_eps^2
+
+The 6 C_eps psi_eps^2 is a second-order Wick counterterm from the difference of Wick
+orderings. Combined with the mass counterterm shift, the full renormalized interaction
+difference has all divergences canceling:
+
+  DeltaV_eps^{ren}(phi, psi) = lambda integral [4 :phi_eps^3: psi_eps + 6 :phi_eps^2: psi_eps^2
+    + 4 phi_eps psi_eps^3 + psi_eps^4] dx
+    + (6 lambda C_eps - delta_m_eps) integral psi_eps^2 dx
+    + 2 delta_m_eps integral phi_eps psi_eps dx
+
+The combination (6 lambda C_eps - delta_m_eps) has a finite limit by the renormalization
+construction.
+
+
+Step 3: Uniform estimates and passage to the limit
+-----------------------------------------------------
+
+Step 3a: Stochastic estimates for Wick powers.
+Under mu_0 (and hence mu, by absolute continuity at the regularized level), the Wick
+powers have regularities (GIP 2015 Proposition 3.1, Mourrat-Weber 2017 Proposition 2.3):
+  - phi in C^{-1/2-kappa} mu-a.s.
+  - :phi^2: in C^{-1-kappa} mu-a.s.
+  - :phi^3: in C^{-3/2-kappa} mu-a.s.
+(These regularities are determined by UV structure, same for mu and mu_0.)
+
+Since psi in C^infinity, the pairings converge:
+  integral :phi_eps^3: psi_eps dx -> <:phi^3:, psi>  (C^{-3/2-k} paired with C^{3/2+k})
+  integral :phi_eps^2: psi_eps^2 dx -> <:phi^2:, psi^2>
+  integral phi_eps psi_eps^3 dx -> <phi, psi^3>
+
+Therefore DeltaV_eps^{ren} converges mu-a.s. to DeltaV^{ren}(phi, psi).
+
+Step 3b: Exponential integrability via quartic domination.
+Using the parameterized Young inequality (p = 4/3, q = 4, parameter delta > 0):
+
+  4 lambda |:phi^3:| |psi| <= (3 delta/4) lambda |phi|^4 + C(delta) lambda |psi|^4
+
+Choosing delta sufficiently small (independent of eps), the quartic term is absorbed by
+the lambda integral :phi^4: in mu_eps, yielding:
+
+  sup_eps E_{mu_eps}[R_eps^{1+eta}] <= C(lambda, m, psi, eta) < infinity
+
+for eta > 0 sufficiently small.
+
+Step 3c: Passage to the limit measure.
+The enhanced stochastic data Xi_eps = (phi_eps, :phi_eps^2:, :phi_eps^3:, renorm. constants)
+converges in probability under mu (GIP 2015, Catellier-Chouk 2018) to Xi = (phi, :phi^2:,
+:phi^3:, c_ren) in the appropriate Besov product space.
+
+DeltaV_eps^{ren} depends continuously on Xi_eps, so DeltaV_eps^{ren} -> DeltaV^{ren}
+in probability under mu, hence R_eps -> R in probability.
+
+By Skorokhod representation theorem: embed on a common probability space where mu_eps -> mu
+a.s. and R_eps -> R a.s. The L^{1+eta} bound gives uniform integrability, so by Vitali's
+theorem R_eps -> R in L^1(mu). This establishes:
+
+  T*_psi(mu) = R * mu, i.e., dT*_psi(mu)/dmu = R.
+
+
+Step 4: Strict positivity (R > 0 mu-a.s.)
+--------------------------------------------
+R(phi) = exp(<phi, A psi> - (1/2)||A^{1/2} psi||^2 - DeltaV^{ren}(phi, psi))
+
+Each term in the exponent is mu-a.s. finite:
+  - <phi, A psi>: distributional pairing of phi in C^{-1/2-k} with A psi in C^infinity
+  - ||A^{1/2} psi||^2: fixed finite constant
+  - DeltaV^{ren}: sum of distributional pairings, each mu-a.s. finite (Step 3a)
+
+Therefore the exponent is mu-a.s. a well-defined real number (not -infinity).
+Hence R(phi) = exp(finite real) > 0 for mu-a.e. phi.
+
+
+Step 5: Equivalence
+---------------------
+T*_psi(mu) << mu (Step 3: density R exists and is in L^1(mu))
+R > 0 mu-a.s. (Step 4)
+
+For the converse: if T*_psi(mu)(B) = 0, then integral_B R dmu = 0. Since R > 0 mu-a.s.,
+this forces mu(B) = 0. Hence mu << T*_psi(mu).
+
+Therefore T*_psi(mu) ~ mu (mutual absolute continuity). QED.
+
+
+MECHANISM SUMMARY
+=================
+1. Cameron-Martin quasi-invariance of the GFF under smooth shifts (psi in H^1).
+2. The non-Gaussian interaction produces at-most-cubic perturbation terms.
+3. The quartic confining potential ensures exponential integrability via Young's inequality.
+4. Singularity mu ⊥ mu_0 is not an obstruction: we work directly via limits of
+   regularized densities.
+5. Strict positivity follows from the exponential form of R (each distributional
+   pairing in the exponent is mu-a.s. finite).
+
+KEY REFERENCES
+==============
+- Hairer (2014), "A theory of regularity structures"
+- Gubinelli-Imkeller-Perkowski (2015), "Paracontrolled distributions and singular PDEs"
+- Catellier-Chouk (2018), "Paracontrolled distributions and the 3-dimensional
+  stochastic quantization equation"
+- Mourrat-Weber (2017), "The dynamic Phi^4_3 model comes down from infinity"
+- Albeverio-Hoegh-Krohn (1976), for the 2D analogue

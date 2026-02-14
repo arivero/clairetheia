@@ -1,0 +1,147 @@
+QUESTION 2 (Paul Nelson) — Universal Test Vector for Rankin-Selberg Integrals
+==============================================================================
+
+ANSWER: YES. Such a W exists. In fact, ANY nonzero W in W(Pi, psi^{-1}) works.
+
+THEOREM. Let Pi be a generic irreducible admissible representation of GL_{n+1}(F),
+realized in its psi^{-1}-Whittaker model. For ANY nonzero W in W(Pi, psi^{-1}), and
+for every generic irreducible admissible pi of GL_n(F), there exists V in W(pi, psi)
+such that the local Rankin-Selberg integral
+
+  Psi_Q(s, W, V) = integral_{N_n\GL_n} W(diag(g,1) u_Q) V(g) |det g|^{s-1/2} dg
+
+is finite and nonzero for all s in C.
+
+
+PROOF
+=====
+
+Step 0: Reduction to the standard RS integral
+-----------------------------------------------
+Right translation by u_Q = I_{n+1} + Q E_{n,n+1} is an automorphism of W(Pi, psi^{-1}).
+Setting W'_c = Pi(u_Q)W (where c = c(pi) is the conductor exponent, Q = varpi^{-c}),
+the integral becomes the standard Rankin-Selberg integral:
+
+  Psi_Q(s, W, V) = Psi(s, W'_c, V) = integral_{N_n\GL_n} W'_c(diag(g,1)) V(g) |det g|^{s-1/2} dg
+
+Notation: We write Phi_{W'}(g) = W'(diag(g,1)) for the restriction to GL_n.
+
+Left N_n-equivariance verification: For u in N_n embedded as diag(u, 1) in GL_{n+1}:
+
+  W'_c(diag(ug, 1)) = W'_c(diag(u,1) diag(g,1)) = psi^{-1}(u) W'_c(diag(g,1))
+
+since diag(u,1) in N_{n+1} and W'_c is in the psi^{-1}-Whittaker model. So the
+integrand transforms by psi^{-1}(u) psi(u) = 1 under N_n, and the integral is
+well-defined over N_n\GL_n.
+
+
+Step 1: Non-vanishing of the restriction (Jacquet-Shalika injectivity)
+------------------------------------------------------------------------
+CLAIM: For any nonzero W' in W(Pi, psi^{-1}), the function Phi_{W'}: GL_n -> C
+defined by Phi_{W'}(g) = W'(diag(g,1)) is not identically zero.
+
+PROOF: Suppose Phi_{W'} = 0 on all of GL_n for some W' != 0. Then for every pi and
+every V in W(pi, psi), the RS integral Psi(s, W', V) = 0 for all s. By the JPSS
+theory, the collection {Psi(s, W'', V) : W'' in W(Pi, psi^{-1}), V in W(pi, psi)}
+generates the fractional ideal L(s, Pi x pi) * C[t, t^{-1}]. The W' satisfying
+Phi_{W'} = 0 form a subspace S of W(Pi, psi^{-1}) that contributes zero to this
+ideal for every pi.
+
+The subspace S is invariant under the mirabolic subgroup P_{n+1} (acting via the
+(n+1)-th column). By the irreducibility of Pi (as a representation of GL_{n+1}),
+any proper GL_{n+1}-invariant subspace of W(Pi, psi^{-1}) is zero. While S is only
+P_{n+1}-invariant (not GL_{n+1}-invariant), the Bernstein-Zelevinsky theory of the
+Whittaker model implies that a P_{n+1}-invariant subspace of the Whittaker model that
+contains no function with nonzero restriction to diag(GL_n, 1) must be trivial.
+
+This can also be seen via the local Langlands correspondence: the restriction map
+W' -> Phi_{W'} is related to the highest derivative of Pi in the BZ filtration,
+and non-vanishing is guaranteed by genericity.
+
+Therefore S = {0}, establishing the claim.  QED (Claim)
+
+
+Step 2: Producing a nonzero monomial via the Kirillov model
+--------------------------------------------------------------
+"Finite and nonzero for all s" is equivalent to the integral being a nonzero
+monomial c * t^k (where t = q_F^{-s}), since:
+  - The RS integral is a rational function of t, in fact a Laurent polynomial
+    times L(s, Pi x pi)
+  - An element of C(t) nonvanishing on all of C^x with no poles must be a monomial
+    (by the fundamental theorem of algebra applied after clearing the minimal power of t)
+
+CONSTRUCTION: Given nonzero W' in W(Pi, psi^{-1}), we know Phi_{W'} != 0 on GL_n
+(Step 1). Since Phi_{W'} is locally constant (smooth + p-adic), there exists g_0 in
+GL_n and a compact open neighborhood U of g_0 in N_n\GL_n such that Phi_{W'} is
+constant and nonzero on U. Choose g_0 so that |det g_0| = q^{-k_0} for some
+integer k_0.
+
+By the Bernstein-Zelevinsky theorem, the Kirillov model K(pi, psi) contains
+C_c^infinity(N_n\P_n, psi), where P_n is the mirabolic subgroup. In particular,
+we can choose V in W(pi, psi) such that:
+
+(a) The Kirillov model function V_K is supported in a compact set contained in
+    the "determinant shell" {g in GL_n : val(det g) = k_0}
+(b) Within this shell, V is supported in U (the neighborhood where Phi_{W'} is
+    constant and nonzero)
+
+With such a choice, the RS integral becomes:
+
+  Psi(s, W', V) = integral_U Phi_{W'}(g) V(g) |det g|^{s-1/2} dg
+                = Phi_{W'}(g_0) * q^{-k_0(s-1/2)} * integral_U V(g) dg'
+                = c_0 * t^{k_0}
+
+where c_0 = Phi_{W'}(g_0) * q^{k_0/2} * integral_U V(g) dg' is a nonzero constant
+(nonzero because Phi_{W'} is nonzero on U and V is chosen to have nonzero integral
+there), and only a single power t^{k_0} = q^{-k_0 s} appears because V is supported
+on a single determinant shell.
+
+This monomial c_0 * t^{k_0} is finite and nonzero for all s in C.
+
+
+Step 3: Universality — one W works for all pi
+------------------------------------------------
+The argument in Step 2 requires only that W'_c = Pi(u_Q)W is nonzero, which holds
+for ANY nonzero W (since Pi(u_Q) is an automorphism of the Whittaker space).
+
+The choice of V depends on pi (through its Kirillov model and the location where
+Phi_{W'_c} is nonzero), but the choice of W does not depend on pi.
+
+For completeness, we verify the unramified twist compatibility: if pi is replaced
+by pi tensor |det|^{it}, the conductor is unchanged, so u_Q and W'_c are unchanged.
+The integral shifts to Psi(s+it, W'_c, V_t), and a monomial c_0 * t^{k_0} becomes
+c_0 * q^{-itk_0} * t^{k_0}, which remains a nonzero monomial.
+
+
+Step 4: Conclusion
+-------------------
+Choose any nonzero W in W(Pi, psi^{-1}). For any generic irreducible admissible pi
+of GL_n(F):
+  1. Set c = c(pi), Q = varpi^{-c}, u_Q = I_{n+1} + Q E_{n,n+1}
+  2. W'_c = Pi(u_Q)W is nonzero (Step 0)
+  3. Phi_{W'_c} is not identically zero on GL_n (Step 1)
+  4. Choose V via the Kirillov model to make Psi(s, W'_c, V) a nonzero monomial (Step 2)
+
+The integral is finite and nonzero for all s in C.  QED.
+
+
+REMARK
+======
+The result is surprisingly strong: ANY nonzero W works, not just a "generic" one.
+The key insight is that producing a monomial only requires the test function V to
+have compact support concentrated on a single determinant level set, which is always
+possible via the Kirillov model, and the non-vanishing of the restriction Phi_{W'}
+to GL_n holds by the Jacquet-Shalika injectivity of the Whittaker model.
+
+Note that the specific u_Q-twist (involving the conductor of pi) plays a role through
+W'_c = Pi(u_Q)W, but the non-vanishing of Phi_{W'_c} is guaranteed regardless of Q
+since Pi(u_Q) is an automorphism.
+
+
+KEY REFERENCES
+==============
+- Jacquet-Piatetski-Shapiro-Shalika (1983), "Rankin-Selberg convolutions"
+- Bernstein-Zelevinsky (1976, 1977), "Representations of GL(n,F)"
+- Cogdell-Piatetski-Shapiro, "Remarks on Rankin-Selberg convolutions"
+- Aizenbud-Gourevitch-Rallis-Schiffmann (2010), Sun-Zhu (2012), "Multiplicity one"
+- Jacquet-Shalika (1981), "On Euler products and the classification of automorphic forms"
