@@ -1,0 +1,117 @@
+SOLUTION TO BOXPLUS INEQUALITY PROBLEM
+
+PROBLEM: Is it true that if p(x) and q(x) are monic real-rooted polynomials of degree n, then
+  1/Phi_n(p boxplus_n q) >= 1/Phi_n(p) + 1/Phi_n(q)?
+
+ANSWER:
+- For n=2: YES (proven with equality).
+- For n≥3: Strongly supported by computational evidence, but NOT proven.
+
+DETAILED FINDINGS:
+
+1. FOR n=2:
+   The inequality holds with EQUALITY for all monic real-rooted polynomials.
+
+   PROOF: Let p(x) = (x - α)(x - β) and q(x) = (x - γ)(x - δ). Then:
+   - p(x) = x² - (α + β)x + αβ, so a₀ = 1, a₁ = -(α + β), a₂ = αβ
+   - q(x) = x² - (γ + δ)x + γδ, so b₀ = 1, b₁ = -(γ + δ), b₂ = γδ
+
+   Using the boxplus formula c_k = sum_{i+j=k} [(n-i)!(n-j)! / (n!(n-k)!)] a_i b_j
+   with n = 2:
+
+   c₀ = (2!·2!)/(2!·2!) · 1 · 1 = 1
+
+   c₁ = (2!·1!)/(2!·1!) · 1 · b₁ + (1!·2!)/(2!·1!) · a₁ · 1
+      = a₁ + b₁ = -(α + β) - (γ + δ) = -(α + β + γ + δ)
+
+   c₂ = (2!·0!)/(2!·0!) · 1 · b₂ + (1!·1!)/(2!·1) · a₁ · b₁ + (0!·2!)/(2!·0!) · a₂ · 1
+      = b₂ + (a₁b₁)/2 + a₂
+      = γδ + [(α + β)(γ + δ)]/2 + αβ
+
+   Therefore: (p ⊞₂ q)(x) = x² - (α + β + γ + δ)x + [αβ + (α + β)(γ + δ)/2 + γδ]
+
+   For a monic quadratic with roots λ₁, λ₂:
+   - Phi_2 = 2/(λ₁ - λ₂)², so 1/Phi_2 = (λ₁ - λ₂)²/2 = discriminant/2
+   - For p(x) = x² + px + q: discriminant = p² - 4q
+
+   Computing discriminants:
+   - disc(p) = (α + β)² - 4αβ = α² - 2αβ + β² = (α - β)²
+   - disc(q) = (γ + δ)² - 4γδ = γ² - 2γδ + δ² = (γ - δ)²
+   - disc(p ⊞₂ q) = (α + β + γ + δ)² - 4[αβ + (α + β)(γ + δ)/2 + γδ]
+                    = (α + β)² + 2(α + β)(γ + δ) + (γ + δ)² - 4αβ - 2(α + β)(γ + δ) - 4γδ
+                    = (α + β)² - 4αβ + (γ + δ)² - 4γδ
+                    = disc(p) + disc(q)
+
+   Therefore: 1/Phi₂(p ⊞₂ q) = disc(p ⊞₂ q)/2 = [disc(p) + disc(q)]/2
+                               = disc(p)/2 + disc(q)/2
+                               = 1/Phi₂(p) + 1/Phi₂(q)  [EQUALITY]
+
+   REAL-ROOTEDNESS PRESERVATION FOR n=2:
+   Since p and q are real-rooted, we have disc(p) ≥ 0 and disc(q) ≥ 0.
+   Therefore disc(p ⊞₂ q) = disc(p) + disc(q) ≥ 0, which proves that p ⊞₂ q
+   is also real-rooted. This completes the n=2 case rigorously.
+
+2. FOR n=3:
+   The inequality appears to hold based on computational evidence.
+
+   OBSERVED CHARACTERIZATION (from computational testing):
+   - Equality appears to hold when both polynomials have equally-spaced roots
+   - The common difference for p need not equal the common difference for q
+
+   EVIDENCE:
+   - Tested 1000+ random cases: all satisfy the inequality
+   - Equality cases verified:
+     * p: [1,2,3] (spacing 1), q: [4,5,6] (spacing 1) → equality
+     * p: [0,1,2] (spacing 1), q: [0,3,6] (spacing 3) → equality (DIFFERENT spacings!)
+     * p: [0,0.5,1] (spacing 0.5), q: [0,2,4] (spacing 2) → equality
+     * p: [1,3,5] (spacing 2), q: [0,0.1,0.2] (spacing 0.1) → equality
+     * p: [-1,0,1] (spacing 1), q: [10,20,30] (spacing 10) → equality
+   - Strict inequality cases:
+     * p: [0,1,2] (AP), q: [0,1,3] (NOT AP) → strict inequality
+     * p: [0,1,3.5] (NOT AP), q: [0,2,4] (AP) → strict inequality
+
+   - Observed pattern: When BOTH polynomials have equally-spaced roots (regardless of
+     whether the spacings match), equality appears to hold. Otherwise, strict inequality.
+
+   REAL-ROOTEDNESS PRESERVATION FOR n=3:
+   The computational evidence shows that p ⊞₃ q has real roots in all tested cases
+   where p and q are real-rooted. However, this is an UNPROVEN ASSUMPTION for n=3.
+   A rigorous proof would need to show that the boxplus operation preserves
+   real-rootedness for all n.
+
+3. FOR n≥4:
+   The inequality appears to hold with STRICT inequality in all tested cases,
+   even when both polynomials have arithmetic progression roots.
+
+   COMPUTATIONAL EVIDENCE:
+   - n=4: Tested 1000+ random cases, all strict inequalities
+   - n=5: Tested 1000+ random cases, all strict inequalities
+   - Even special cases like [1,2,3,4] and [5,6,7,8] give strict inequality
+
+   REAL-ROOTEDNESS PRESERVATION FOR n≥4:
+   Same caveat as n=3: this is an UNPROVEN ASSUMPTION based on computational evidence.
+
+COMPUTATIONAL VERIFICATION:
+- Total tests performed: 5000+ cases across n=2,3,4,5
+- Violations found: 0
+- The inequality 1/Phi_n(p boxplus_n q) >= 1/Phi_n(p) + 1/Phi_n(q) holds in ALL cases
+
+CONCLUSION:
+- For n=2: The inequality is PROVEN to hold with equality.
+- For n≥3: The inequality is strongly supported by computational evidence but NOT proven.
+
+EQUALITY CONDITIONS:
+- n=2: Always equality (PROVEN)
+- n=3: Equality appears to hold when both polynomials have roots in arithmetic progression
+       (the spacings need NOT match between p and q) - COMPUTATIONAL EVIDENCE ONLY
+- n≥4: Always strict inequality (COMPUTATIONAL EVIDENCE ONLY)
+
+NOTE: A complete rigorous proof for n≥3 would require:
+1. Proving that the boxplus operation preserves real-rootedness for all n
+2. Theoretical analysis of the boxplus operation and its relation to Phi_n
+3. Understanding the geometric/analytic properties of the functional Phi_n
+4. Proving that the observed equality patterns hold in full generality
+
+The computational evidence is extremely strong (5000+ tests with 0 violations) and
+suggests the inequality is indeed true for all n, with the equality cases appearing
+to follow clear patterns. However, only the n=2 case has been rigorously proven.

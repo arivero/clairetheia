@@ -18,6 +18,7 @@ have no loyalty to it.
 
 3. **Check computations.** Re-derive any algebraic or numerical calculation
    from scratch. If you can run code, do so.
+   Note: executing the scripts in /tmp lacks accountability, use a local ./tmp or better ./aux
 
 4. **Balanced assessment.** Do not assume the proof is correct. Do not assume
    it is wrong. Evaluate each step on its merits.

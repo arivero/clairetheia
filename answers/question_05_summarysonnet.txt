@@ -1,0 +1,80 @@
+QUESTION 5 (Andrew J. Blumberg) — SUMMARY
+==========================================
+
+O-Slice Filtration and Geometric Fixed Point Characterization
+
+DEFINITIONS (Section 1):
+- An incomplete transfer system O determines a set Sub_O(G) of *O-admissible
+  subgroups* (those H where a non-trivial norm N_K^H exists in O), plus the
+  trivial subgroup e.
+- O-slice cells: G_+ /\_H S^{m*rho_H} for H in Sub_O(G), with O-slice
+  dimension m*|H|.
+- O-slice >= n: all maps from O-slice cells of dimension < n into X vanish.
+  Equivalently, pi_{m*rho_H}^H(X) = 0 for all H in Sub_O(G) and m*|H| < n.
+
+MAIN THEOREM (Theorem 2.1):
+For a connective G-spectrum X:
+
+  X is O-slice n-connected  <==>  Phi^H(X) is floor(n/|H|)-connected
+                                   for every H in Sub_O(G).
+
+Equivalently (Form A):
+
+  X is O-slice >= n  <==>  Phi^H(X) is (ceil(n/|H|) - 1)-connected
+                            for every H in Sub_O(G).
+
+SPECIAL CASES:
+- Complete transfer system (Sub_O(G) = Sub(G)): recovers the Hill-Hopkins-Ravenel
+  Slice Connectivity Theorem (HHR Theorem 6.1).
+- Trivial transfer system (Sub_O(G) = {e}): recovers the Postnikov filtration
+  (X is O-slice n-connected iff the underlying spectrum is n-connected).
+
+PROOF ARCHITECTURE (Sections 3-4):
+- Proposition 3.6 (simultaneous form): the rho-graded vanishing for ALL subgroups
+  simultaneously is equivalent to geometric fixed point connectivity for all
+  subgroups. Proved by joint induction on |H| using the isotropy separation
+  sequence and the cofiber sequence S^k -> S^{k*rho_H} -> D_k.
+- Lemma 3.7 (bootstrapping): K-equivariant information for K not in Sub_O(G)
+  is bootstrapped from underlying connectivity using induction on |K|. This
+  bridges the gap between the O-admissible subgroups (where the theorem
+  hypothesis applies) and all subgroups (where the proof needs information).
+- Theorem 2.1 follows by combining Proposition 3.6 with Lemma 3.7.
+
+KEY TECHNICAL TOOLS:
+1. Isotropy separation sequence: EP_+ -> S^0 -> tilde{E}P, giving the long
+   exact sequence relating pi_q^H(X), pi_q(Phi^H(X)), and proper-subgroup
+   contributions.
+2. Cofiber sequence S^k -> S^{k*rho_H} -> D_k, where D_k is built from cells
+   over proper subgroups of H (Lemma 3.5).
+3. Dimension bound: k*[H:K] <= floor(n/|K|) whenever k <= floor(n/|H|) and
+   K <= H. This controls all proper-subgroup contributions in the cofiber D_k.
+4. Atiyah-Hirzebruch spectral sequence for equivariant CW spectra, applied to
+   EP_+ and D_k to show vanishing of mapping groups.
+
+KEY ISSUES RESOLVED ACROSS 4 ROUNDS OF GENERATE-VERIFY-REVISE:
+1. Corrected the colimit formula sign for geometric fixed points (Round 1->2).
+2. Removed false "Key Claim" (pi_{k*rho_H}^H(X /\ EP_+) = 0) with concrete
+   counterexample: X = S^0, H = C_2 gives pi_0^{C_2}(Sigma^infty EC_2_+) = Z
+   via the tom Dieck splitting (Round 2->3).
+3. Removed false colimit stabilization claim (pi_V^H(X) != 0 for virtual V with
+   negative underlying dim; counterexample: pi_{-sigma}^{C_2}(S^0) = Z)
+   (Round 3->4).
+4. Fixed Sub_O(G) vs Sub(G) gap via Lemma 3.7 (Round 3->4).
+5. Restated Proposition 3.6 as simultaneous induction over all subgroups,
+   matching what the proof actually establishes (Round 3->4).
+
+EXAMPLE (G = C_4, O with only N_{C_2}^{C_4} available):
+Sub_O(G) = {e, C_4}. X is O-slice m-connected iff:
+  - underlying(X) is m-connected, AND
+  - Phi^{C_4}(X) is floor(m/4)-connected.
+The condition on Phi^{C_2} is absent, reflecting the coarser filtration from the
+incomplete transfer system. The C_2-equivariant information needed internally
+by the proof is bootstrapped from underlying connectivity via Lemma 3.7.
+
+KEY REFERENCES:
+- Hill-Hopkins-Ravenel (2016), "On the nonexistence of elements of Kervaire
+  invariant one" — Theorem 6.1 (Slice Connectivity Theorem)
+- Hill (2012), "The equivariant slice filtration: a primer" — Theorem 3.1
+- Blumberg-Hill (2015), "Operadic multiplications in equivariant spectra, norms,
+  and transfers" — N_infinity operads and transfer systems
+- Blumberg-Hill (2018), "Incomplete Tambara functors" — incomplete transfer systems
